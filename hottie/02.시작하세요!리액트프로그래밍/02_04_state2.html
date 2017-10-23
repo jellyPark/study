@@ -9,6 +9,7 @@
 		<!-- 앱이 렌더링되는 위치 -->
 	</div>
 	<div id="app2"></div>
+	<div id="app3"></div>
 
 	<script src="react/build/react.js"></script>
 	<script src="react/build/react-dom.js"></script>
@@ -101,6 +102,52 @@
 		// 프로퍼티와 상태에 접근 방법
 		myTextAreaCounter.props; // {defaultValue:"Bob"}
 		myTextAreaCounter.state; // {text: "Hello outside world!"}
+
+
+        // 예제3 - 작동 중 프로퍼티 변경
+        var TextAreaCounter3 = React.createClass({
+            propTypes: {
+                defaultValue : React.PropTypes.string
+            },
+            getDefaultProps: function(){
+                return {
+                    text: ''
+                };
+            },
+            getInitialState:function(){
+                return{
+                    text: this.props.defaultValue
+                }
+            },
+            _textChange: function(ev){
+                this.setState({
+                    text: ev.target.value
+                });
+            },
+			componentWillReceiveProps: function(newProps){ // 외부의 프로퍼티 변경을 매끄럽게 처리한 메서드
+                this.setState({
+					text: newProps.defaultValue
+				});
+			},
+            render: function(){
+                return React.DOM.div(null,
+                    React.DOM.textarea({
+                        value: this.state.text,
+                        onChange: this._textChange
+                    }),
+                    React.DOM.h3(null, this.state.text.length)
+                );
+            }
+        });
+
+        var myTextAreaCounter2 = ReactDOM.render(
+            React.createElement(TextAreaCounter3, {
+                defaultValue: "Hello"
+            }),
+            document.getElementById("app3")
+        );
+
+        myTextAreaCounter2.props; // {defaultValue:"Hello"}
 
 
 	</script>
